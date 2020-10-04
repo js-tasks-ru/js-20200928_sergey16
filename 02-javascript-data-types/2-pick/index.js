@@ -5,8 +5,12 @@
  * @returns {object} - returns the new object
  */
 export const pick = (obj, ...fields) => {
-	let map = new Map(Object.entries(obj));
+	const map = new Map(Object.entries(obj));
 	let newmap = new Map();
-	for (let value of fields) if(map.has(value)){newmap.set(value,map.get(value));}
+	for (let value of fields){
+		if(map.has(value)){
+			newmap.set(value,map.get(value));
+		}
+	}
 	return Object.fromEntries(newmap.entries());
 };
