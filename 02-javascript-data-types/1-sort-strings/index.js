@@ -7,9 +7,10 @@
 export function sortStrings(arr, param = 'asc') {
 	let newarr = arr.slice();
 	const collator = new Intl.Collator(['ru','en'], {sensitivity: 'case',caseFirst: 'upper'});
-	newarr.sort(function(a, b) {
-		return collator.compare(a, b);
+	if (param === 'asc')return newarr.sort(function(a, b) {
+			return collator.compare(a, b);
+		});	
+	else if (param === 'desc') return newarr.sort(function(a, b) {
+		return collator.compare(b, a);
 	});
-	if (param === 'asc') return newarr;
-	else if (param === 'desc') return newarr.reverse();
 }
