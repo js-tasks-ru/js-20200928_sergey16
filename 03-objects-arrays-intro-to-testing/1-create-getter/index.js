@@ -10,7 +10,7 @@ export function createGetter(path) {
 			const arr = path.split('.');
 			for (const item of arr){
 				if (item in rez)	rez = rez[item];
-				else return undefined;
+				else return;
 			}
 			return rez;	
 			
