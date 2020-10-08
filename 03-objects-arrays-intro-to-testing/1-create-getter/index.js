@@ -7,7 +7,8 @@ export function createGetter(path) {
  return function getter(product){
 		if (path){
 			let rez = product;
-			for (const item of path.split('.')){
+			const arr = path.split('.');
+			for (const item of arr){
 				if (item in rez)	rez = rez[item];
 				else return undefined;
 			}
