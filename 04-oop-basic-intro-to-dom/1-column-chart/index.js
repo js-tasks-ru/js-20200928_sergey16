@@ -2,25 +2,28 @@ export default class ColumnChart {
 element;//html element
 	constructor(set){
 		//инициализация переменных
-		this.data = set.data;
-		this.label = set.label;
-		this.value = set.value;
-		this.link = set.link;
+		if (this.hasOwnProperty('data'))this.data = set.data;
+		else this.data = [];
+		if (this.hasOwnProperty('label'))this.label = set.label;
+		else this.label = "";
+		if (this.hasOwnProperty('value'))this.value = set.value;
+		else this.value = 0;
+		if (this.hasOwnProperty('link'))this.link = set.link;
+		else this.link = "";
 		//вызов функций в конструкторе
 		this.render();
 	}
 	render(){
+		let skeleton = "";
+		//проверка на пустые данные
+		if (this.data.length>0 ) skeleton =`"background:;"`;
+		else skeleton = `"background: url('charts-skeleton.svg') center no-repeat;"`;	
 		//Функция что делает набор строк по массиву
 		function strSet(arr){
 		let str ="";
-		//проверка на пустые данные
-		if (arr!==[] && arr!==undefined){
-
 		arr.forEach(function(item) {
-							str += `<div style="--value: ${item}" data-tooltip="${item/100*50}%"></div>`
+							str += `<div style="--value: ${item}/100*50" data-tooltip="${item/100*50}%"></div>`
 							}); 
-		}
-		else str =`<img src="charts-skeleton.svg" height="100%" width="100%">`; 
 		return str;	
 		}
 		//задание диф элемента
@@ -28,10 +31,10 @@ element;//html element
 			//наполняем данными
 			div.innerHTML = `
 				<div class="dashboard__chart_${this.label}">
-					<div class="column-chart">
+					<div class="column-chart" style=`+skeleton+`}>
 						<div class="column-chart__title">
 							Total ${this.label}
-							<a href="/${this.label}" class="column-chart__link">View all</a>
+							<a href="/${this.link}" class="column-chart__link">View all</a>
 						</div>
 						<div class="column-chart__container">
 							<div data-element="header" class="column-chart__header">${this.value}</div> 
