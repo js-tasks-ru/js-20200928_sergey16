@@ -2,13 +2,13 @@ export default class ColumnChart {
 element;//html element
 	constructor(set){
 		//инициализация переменных
-		if (this.hasOwnProperty('data'))this.data = set.data;
+		if ('data' in set )this.data = set.data;
 		else this.data = [];
-		if (this.hasOwnProperty('label'))this.label = set.label;
+		if ('label' in set)this.label = set.label;
 		else this.label = "";
-		if (this.hasOwnProperty('value'))this.value = set.value;
+		if ('value' in set)this.value = set.value;
 		else this.value = 0;
-		if (this.hasOwnProperty('link'))this.link = set.link;
+		if ('link' in set)this.link = set.link;
 		else this.link = "";
 		//вызов функций в конструкторе
 		this.render();
