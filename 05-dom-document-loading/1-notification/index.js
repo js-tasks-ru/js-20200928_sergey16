@@ -1,4 +1,5 @@
 export default class NotificationMessage {
+element;
 	constructor(notification,{
 		duration = 0,
 		type = ""
@@ -9,11 +10,13 @@ export default class NotificationMessage {
 			this.type = type;
 			//вызов функций в конструкторе
 	}
-		
+  get element() {
+    return this.element.join();
+  }
 	render(){
 		//задание див элемента
-		const element = document.createElement('div');
-		element.innerHTML = ` 
+		this.element = document.createElement('div');
+    this.element.innerHTML = `
 				<div class="notification ${this.type}" style="--value:${this.dur}s">
 					<div class="timer"></div>
 					<div class="inner-wrapper">
@@ -21,10 +24,10 @@ export default class NotificationMessage {
 						<div class="notification-body">
 						${this.note}
 					</div>
-				</div>	
+				</div>
 			`;
-		this.element = element.firstElementChild;
-		document.body.append(element);
+		this.element = this.element.firstElementChild;
+		document.body.append(this.element);
 		setTimeout(() => element.remove(), this.dur);
 
 	}
@@ -35,7 +38,7 @@ export default class NotificationMessage {
 	remove(){
 		this.element.remove();
 	}
-	
+
 	destroy(){
 		this.remove();
 	}
