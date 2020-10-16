@@ -18,14 +18,13 @@ export default class SortableTable {
     this.render();
   }
   getRowsHead({id, title, sortable}) {
-    return `<div class="sortable-table__cell" data-id=${id} data-sortable=${sortable} data-order="asc">
-                <span> ${title} </span>
+    return `<div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}">
+                <span>${title}</span>
                 ${this.getHeadSortArrow()}
             </div>`;
   }
   getHeadSortArrow() { //задел на апгрейд версии сортируемых таблиц
-    return `
-    <span data-element="arrow" class="sortable-table__sort-arrow">
+    return `<span data-element="arrow" class="sortable-table__sort-arrow">
       <span class="sort-arrow"></span>
     </span>`;
   }
@@ -36,16 +35,12 @@ export default class SortableTable {
   }
   getTabBody() {
     return `<div data-element="body" class="sortable-table__body">
-
                     ${this.getRowsTab(this.data)}
-
                 </div>`;
   }
   getRowsTab(data) {
     return data.map(item => {
-      return `<a href="/products/${item.id}" class="sortable-table__row">
-                   ${this.getRowTab(item)}
-            </a>`;
+      return `<a href="/products/${item.id}" class="sortable-table__row">${this.getRowTab(item)}</a>`;
     }).join("");
   }
   getRowTab(item) {
@@ -57,10 +52,7 @@ export default class SortableTable {
     });
     return cell.map(({id, template}) => {
       return template ? template(item[id])
-        : `
-         <div class="sortable-table__cell">
-          ${item[id]}
-         </div>`;
+        : `<div class="sortable-table__cell">${item[id]}</div>`;
     }).join("");
   }
 
@@ -99,8 +91,7 @@ export default class SortableTable {
       case "number":
         return dir * (a[field] - b[field]);
       case "string":
-        const collator = new Intl.Collator(['ru','en'], {sensitivity: 'case',caseFirst: 'upper'});
-        return dir * collator.compare(a[field], b[field]);
+        return dir * a[field].localeCompare(b[field], "ru");
       default:
         return dir * (a[field] - b[field]);
       }
