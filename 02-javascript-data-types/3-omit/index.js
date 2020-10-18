@@ -5,5 +5,11 @@
  * @returns {object} - returns the new object
  */
 export const omit = (obj, ...fields) => {
-
+ 	const map = new Map(Object.entries(obj));
+	for (let value of fields){
+		if(map.has(value)){
+			map.delete(value);
+		}
+	}
+	return Object.fromEntries(map.entries());
 };
