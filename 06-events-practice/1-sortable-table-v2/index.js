@@ -117,7 +117,7 @@ export default class SortableTable {
       column.dataset.order = "";
     });
     curColumn.dataset.order = order;
-    this.subElements.body.innerHTML = this.getRowsTab(sortedData);
+    //this.subElements.body.innerHTML = this.getRowsTab(sortedData);
   }
   sortData(field, order) {
     const arr = [...this.data];
