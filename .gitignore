@@ -143,9 +143,3 @@ teacher.karma.conf.js
 
 teacher*
 TODO.md
-
-# project files
-
-*.spec.js
-.gitignore
-
