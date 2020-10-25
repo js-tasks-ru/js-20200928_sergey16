@@ -14,7 +14,7 @@ export default class SortableTable {
   step = 20;
   end = this.start + this.step;
 
-  constructor (headConf=[], {
+  constructor (headConf = [], {
     url = "",
     sorted = {
       id: headConf.find(item=>item.sortable).id,
@@ -123,7 +123,7 @@ export default class SortableTable {
     this.renderRows(data);
     this.initEvent();//нажатие для сортировки
   }
-  async loadData (id, order, start= this.start, end = this.end){
+  async loadData (id, order, start = this.start, end = this.end) {
 
     //загрузка параметров
     this.url.searchParams.set("_sort", id);
@@ -140,7 +140,8 @@ export default class SortableTable {
   }
 
   initEvent() {
-    this.subElements.header.addEventListener("click", this.onSortClick);
+    this.subElements.header.addEventListener("pointerdown", this.onSortClick);
+    document.addEventListener('scroll', this.onWindowScroll);
   }
   onSortClick = event => {
     const column = event.target.closest(`[data-sortable="true"]`);//определение на какой колонке нажали
@@ -153,16 +154,37 @@ export default class SortableTable {
     };
     if (column) {
       const {id, order} = column.dataset;
-      const sortedData = this.sortData(id, sw(order));
+      const newOrder = sw(order);
       const arrow = column.querySelector(".sortable-table__sort-arrow");
       column.dataset.order = sw(order);
       if (!arrow) {//вставляем анимацию стрелки если ее нет
         column.append(this.subElements.arrow);
       }
-      this.subElements.body.innerHTML = this.getRowsTab(sortedData);//сортировка по выбранной колонке
+      if (this.isSortLocal) {
+        this.sortLocal(id, newOrder);
+      } else {
+        this.sortOnServer(id, newOrder, 1, 1 + this.step).then();
+      }
     }
   }
+  sortLocal(id, order) {
+    const sortedData = this.sortData(id, order);
 
+    this.subElements.body.innerHTML = this.getRowsTab(sortedData);//сортировка по выбранной колонке
+  }
+  renderRows(data) {
+    if (data.length) {
+      this.element.classList.remove('sortable-table_empty');
+      this.addRows(data);
+    } else {
+      this.element.classList.add('sortable-table_empty');
+    }
+  }
+  addRows(data) {
+    this.data = data;
+
+    this.subElements.body.innerHTML = this.getRowsTab(data);
+  }
 
   sort(field, order) {
     const sortedData = this.sortData(field, order);
@@ -174,6 +196,11 @@ export default class SortableTable {
     curColumn.dataset.order = order;
     this.subElements.body.innerHTML = this.getRowsTab(sortedData);
   }
+  async sortOnServer(id, order, start, end) {
+    const data = await this.loadData(id, order, start, end);
+
+    this.renderRows(data);
+  }
   sortData(field, order) {
     const arr = [...this.data];
     const column = this.headConf.find(item => item.id === field);
@@ -182,12 +209,12 @@ export default class SortableTable {
 
     return arr.sort((a, b)=>{
       switch (sortType) {
-        case "number":
-          return dir * (a[field] - b[field]);
-        case "string":
-          return dir * a[field].localeCompare(b[field], "ru");
-        default:
-          return dir * (a[field] - b[field]);
+      case "number":
+        return dir * (a[field] - b[field]);
+      case "string":
+        return dir * a[field].localeCompare(b[field], "ru");
+      default:
+        return dir * (a[field] - b[field]);
       }
     });
   }

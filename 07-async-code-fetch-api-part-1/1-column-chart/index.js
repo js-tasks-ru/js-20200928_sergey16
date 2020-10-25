@@ -20,13 +20,12 @@ export default class ColumnChart {
 
     //вызов функций в конструкторе
     this.render();
-    this.loadData(this.range.from, this.range.to);
+    this.loadData(this.range.from, this.range.to).then();
 
   }
   getColBody(data) {
     // задание коэффициэнта
     const maxVal = Math.max(...Object.values(data));
-
     return Object.entries(data).map(item => {
       const scale = this.chartHeight / maxVal;
       //считаем процент
@@ -52,12 +51,11 @@ export default class ColumnChart {
 				<div class="column-chart column-chart_loading" style="...${this.chartHeight}">
 					<div class="column-chart__title">
 						Total ${this.label}
-						<a href="/${this.link}" class="column-chart__link">View all</a>
+						 ${this.getLink()}
 					</div>
 					<div class="column-chart__container">
 						<div data-element="header" class="column-chart__header">${this.value}</div>
 						<div data-element="body" class="column-chart__chart">
-							${this.getColBody(this.data)}
 						</div>
 					</div>
 				</div>
@@ -67,6 +65,9 @@ export default class ColumnChart {
     // this.element.classList.remove(`column-chart_loading`);
     //}
     this.subElements = this.getSubElement(this.element);
+  }
+  getLink() {
+    return this.link ? `<a class="column-chart__link" href="${this.link}">View all</a>` : '';
   }
   async loadData(from, to) {
 
@@ -92,8 +93,8 @@ export default class ColumnChart {
   }
 
   //обновление при изменении входных данных
-  update(data) {
-    this.subElements.body.innerHTML = this.getColBody(data);
+  async update(from, to) {
+    return await this.loadData(from, to);
   }
   //удаление элемента
   remove() {
